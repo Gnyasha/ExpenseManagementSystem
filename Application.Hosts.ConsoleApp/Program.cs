@@ -3,6 +3,7 @@ using Application.Contracts.Data;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Linq;
 
 namespace Application.Hosts.ConsoleApp
 {
@@ -18,7 +19,7 @@ namespace Application.Hosts.ConsoleApp
             var module = new DatabaseModule();
             module.Host = ".";
             module.Password = "";
-            module.DatabaseName = "SampleDb";
+            module.DatabaseName = "ExpenseManagementSystem";
             module.UserName = "";
             module.IntegratedSecurity = true;
 
@@ -35,13 +36,16 @@ namespace Application.Hosts.ConsoleApp
 
                 }
 
-                var person = result.GetService<ISystemUserDao>();
+                var person = result.GetService<ITransactionStatusDao>();
                 if (person != null)
                 {
                     try
                     {
-                        var people = person.GetAllSystemUsers();
-                        
+                        var people = person.GetAll().ToList();
+                        foreach (var item in people)
+                        {
+                            Console.WriteLine(item.Status);
+                        }
                     }
                     catch (Exception ex)
                     {

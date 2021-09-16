@@ -14,7 +14,7 @@ namespace Application.Contracts.Data
     /// </summary>
     public interface ISystemUserDao : IGenericDao<SystemUser>
     {
-        IQueryable<SystemUser> GetAllSystemUsers();
-        SystemUser SaveOrUpdatePerson(SystemUser person);
+        //IQueryable<SystemUser> GetAllSystemUsers();
+        //SystemUser SaveOrUpdatePerson(SystemUser person);
     }
 }

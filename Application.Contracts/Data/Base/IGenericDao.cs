@@ -10,6 +10,6 @@ namespace Application.Contracts.Data.Base
         T GetById(int id);
         IReadOnlyList<T> GetAll();
         T SaveOrUpdate(T entity);
-        int DeleteById(int id);
+        void Delete(T entity);
     }
 }

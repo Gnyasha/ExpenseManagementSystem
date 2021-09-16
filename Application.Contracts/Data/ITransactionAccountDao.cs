@@ -7,7 +7,7 @@ namespace Application.Contracts.Data
     using Application.Domain.Models;
     using Application.Contracts.Data.Base;
     using Application.Data.Mapping;
-    public interface ITransactionAccount : IGenericDao<TransactionAccount>
+    public interface ITransactionAccountDao : IGenericDao<TransactionAccount>
     {
     }
 }

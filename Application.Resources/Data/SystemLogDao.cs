@@ -1,7 +1,10 @@
-﻿using System;
+﻿using Application.Contracts.Data;
+using Application.Domain.Models;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
+
 
 /*Nuget Dependancies*/
 using NHibernate;
@@ -13,7 +16,7 @@ namespace Application.Resources.Data
     using Application.Domain.Models;
     using Application.Resources.Utilities;
 
-    public class SystemUserDao : Contracts.Data.ISystemUserDao
+    public class SystemLogDao : ISystemLogDao
     {
         private readonly ISession m_Session;
 
@@ -21,7 +24,7 @@ namespace Application.Resources.Data
         /// 
         /// </summary>
         /// <param name="session"></param>
-        public SystemUserDao(ISession session)
+        public SystemLogDao(ISession session)
         {
             if (session == null)
             {
@@ -30,22 +33,22 @@ namespace Application.Resources.Data
             m_Session = session;
         }
 
-        public void Delete(SystemUser entity)
+        public void Delete(SystemLog entity)
         {
             m_Session.Delete(entity);
         }
 
-        public IReadOnlyList<SystemUser> GetAll()
+        public IReadOnlyList<SystemLog> GetAll()
         {
-            return (IReadOnlyList<SystemUser>)m_Session.Query<SystemUser>();
+            return (IReadOnlyList<SystemLog>)m_Session.Query<SystemLog>();
         }
 
-        public SystemUser GetById(int id)
+        public SystemLog GetById(int id)
         {
-            return m_Session.Query<SystemUser>().Where(a => a.Id == id).FirstOrDefault();
+            return m_Session.Query<SystemLog>().Where(a => a.Id == id).FirstOrDefault();
         }
 
-        public SystemUser SaveOrUpdate(SystemUser entity)
+        public SystemLog SaveOrUpdate(SystemLog entity)
         {
             m_Session.SaveOrUpdate(entity);
             m_Session.FlushAsync();

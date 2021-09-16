@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 
+
 /*Nuget Dependancies*/
 using NHibernate;
 
@@ -11,9 +12,8 @@ namespace Application.Resources.Data
 {
     using Application.Contracts.Data;
     using Application.Domain.Models;
-    using Application.Resources.Utilities;
 
-    public class SystemUserDao : Contracts.Data.ISystemUserDao
+    public class TransactionStatusDao : ITransactionStatusDao
     {
         private readonly ISession m_Session;
 
@@ -21,7 +21,7 @@ namespace Application.Resources.Data
         /// 
         /// </summary>
         /// <param name="session"></param>
-        public SystemUserDao(ISession session)
+        public TransactionStatusDao(ISession session)
         {
             if (session == null)
             {
@@ -30,22 +30,22 @@ namespace Application.Resources.Data
             m_Session = session;
         }
 
-        public void Delete(SystemUser entity)
+        public void Delete(TransactionStatus entity)
         {
             m_Session.Delete(entity);
         }
 
-        public IReadOnlyList<SystemUser> GetAll()
+        public IReadOnlyList<TransactionStatus> GetAll()
         {
-            return (IReadOnlyList<SystemUser>)m_Session.Query<SystemUser>();
+            return (IReadOnlyList<TransactionStatus>)m_Session.Query<TransactionStatus>();
         }
 
-        public SystemUser GetById(int id)
+        public TransactionStatus GetById(int id)
         {
-            return m_Session.Query<SystemUser>().Where(a => a.Id == id).FirstOrDefault();
+            return m_Session.Query<TransactionStatus>().Where(a => a.Id == id).FirstOrDefault();
         }
 
-        public SystemUser SaveOrUpdate(SystemUser entity)
+        public TransactionStatus SaveOrUpdate(TransactionStatus entity)
         {
             m_Session.SaveOrUpdate(entity);
             m_Session.FlushAsync();
