@@ -9,17 +9,22 @@ namespace Application.Data.Mapping
 {
     using Application.Domain.Models;
 
-    public class PersonMap : ClassMap<Person>
+    public class SystemUserMap : ClassMap<SystemUser>
     {
-        public PersonMap()
+        public SystemUserMap()
         {
             Id(p => p.Id);
-            Map(p => p.FirstName);
-            Map(p => p.MiddleName);
-            Map(p => p.LastName);
-            Map(p => p.DateOfBirth);
+            Map(p => p.UserName);
             Map(p => p.Email);
-            Table("Persons");
+            Map(p => p.FirstName);
+            Map(p => p.LastName);
+            Map(p => p.PasswordHash);
+            Map(p => p.PasswordSalt);
+            Map(p => p.DateCreated);
+            Map(p => p.Email);
+            Map(p => p.IsActive);
+            Map(p => p.RoleId);
+            Table("SystemUsers");
         }
 
     }

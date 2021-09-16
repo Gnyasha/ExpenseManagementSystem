@@ -10,9 +10,9 @@ namespace Application.Contracts.DatabaseSessions
     public interface IDbAccess
     {
         /// <summary>
-        /// Returns all Persons
+        /// Returns all SystemUsers
         /// </summary>
         /// <returns></returns>
-        IQueryable<Person> GetAllPersons();
+        IQueryable<SystemUser> GetAllSystemUsers();
     }
 }

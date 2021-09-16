@@ -33,7 +33,7 @@ namespace Application.Data
 
             var config = Fluently.Configure();
             config.Database(MsSqlConfiguration.MsSql2012.ConnectionString(connectionString));
-            config.Mappings(m => m.FluentMappings.AddFromAssemblyOf<PersonMap>());
+            config.Mappings(m => m.FluentMappings.AddFromAssemblyOf<SystemUserMap>());
 
             return config.BuildSessionFactory();
         }

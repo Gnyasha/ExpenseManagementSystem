@@ -19,7 +19,7 @@ namespace Application.Resources.Data
         private readonly ISession session;
 
         /// <summary>
-        /// Initialises an instance of a <see cref="Person"/>
+        /// Initialises an instance of a <see cref="SystemUser"/>
         /// </summary>
         /// <param name="session"></param>
         public DbAccess(ISession _session)
@@ -27,9 +27,9 @@ namespace Application.Resources.Data
             session = _session;
         }
 
-        public IQueryable<Person> GetAllPersons()
+        public IQueryable<SystemUser> GetAllSystemUsers()
         {
-            return session.Query<Person>();
+            return session.Query<SystemUser>();
         }
     }
 }
