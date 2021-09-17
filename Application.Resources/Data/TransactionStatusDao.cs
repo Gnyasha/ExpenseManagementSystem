@@ -35,9 +35,10 @@ namespace Application.Resources.Data
             m_Session.Delete(entity);
         }
 
-        public IReadOnlyList<TransactionStatus> GetAll()
+        public IQueryable<TransactionStatus> GetAll()
         {
-            return (IReadOnlyList<TransactionStatus>)m_Session.Query<TransactionStatus>();
+           return m_Session.Query<TransactionStatus>();
+         
         }
 
         public TransactionStatus GetById(int id)

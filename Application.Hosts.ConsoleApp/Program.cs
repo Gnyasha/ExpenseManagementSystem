@@ -35,22 +35,22 @@ namespace Application.Hosts.ConsoleApp
 
                 }
 
-                var person = result.GetService<ITransactionStatusDao>();
+                var person = result.GetService<ITransactionStatusDao>().GetAll();
                 if (person != null)
                 {
                     try
                     {
-                        var people = person.GetAll().ToList();
-                        foreach (var item in people)
+                       
+                        foreach (var item in person)
                         {
                             Console.WriteLine(item.Status);
                         }
                     }
                     catch (Exception ex)
                     {
-                        string correlationId = Guid.NewGuid().ToString();
-                        logger.LogError(ex, "An unexpected error occured. Error Code: {ErrorCode}", correlationId);
-                        throw new ApplicationException($"Unexpected server error: {correlationId}");
+                        //string correlationId = Guid.NewGuid().ToString();
+                        //logger.LogError(ex, "An unexpected error occured. Error Code: {ErrorCode}", correlationId);
+                        //throw new ApplicationException($"Unexpected server error: {correlationId}");
                     }
 
                 }

@@ -35,9 +35,9 @@ namespace Application.Resources.Data
             m_Session.Delete(entity);
         }
 
-        public IReadOnlyList<SystemUser> GetAll()
+        public IQueryable<SystemUser> GetAll()
         {
-            return (IReadOnlyList<SystemUser>)m_Session.Query<SystemUser>();
+            return m_Session.Query<SystemUser>();
         }
 
         public SystemUser GetById(int id)

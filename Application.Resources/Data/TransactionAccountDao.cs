@@ -35,9 +35,9 @@ namespace Application.Resources.Data
             m_Session.Delete(entity);
         }
 
-        public IReadOnlyList<TransactionAccount> GetAll()
+        public IQueryable<TransactionAccount> GetAll()
         {
-            return (IReadOnlyList<TransactionAccount>)m_Session.Query<TransactionAccount>();
+            return m_Session.Query<TransactionAccount>();
         }
 
         public TransactionAccount GetById(int id)

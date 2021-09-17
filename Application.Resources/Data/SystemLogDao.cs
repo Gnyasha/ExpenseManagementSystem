@@ -38,9 +38,9 @@ namespace Application.Resources.Data
             m_Session.Delete(entity);
         }
 
-        public IReadOnlyList<SystemLog> GetAll()
+        public IQueryable<SystemLog> GetAll()
         {
-            return (IReadOnlyList<SystemLog>)m_Session.Query<SystemLog>();
+            return m_Session.Query<SystemLog>();
         }
 
         public SystemLog GetById(int id)

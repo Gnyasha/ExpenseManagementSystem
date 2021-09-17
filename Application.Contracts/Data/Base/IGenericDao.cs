@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Application.Contracts.Data.Base
@@ -8,7 +9,7 @@ namespace Application.Contracts.Data.Base
     public interface IGenericDao<T> where T : class
     {
         T GetById(int id);
-        IReadOnlyList<T> GetAll();
+        IQueryable<T> GetAll();
         T SaveOrUpdate(T entity);
         void Delete(T entity);
     }

@@ -15,7 +15,6 @@ namespace Application.Data.Mapping
             Map(p => p.DateCreated);
             Map(p => p.AccountName);
             Map(p => p.BalanceTypeId);
-            Map(p => p.DateCreated);
             Map(p => p.CreatedBy);
             Map(p => p.ModifiedBy);
             Table("TransactionAccounts");
