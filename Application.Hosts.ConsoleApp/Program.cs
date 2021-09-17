@@ -40,7 +40,6 @@ namespace Application.Hosts.ConsoleApp
                 {
                     try
                     {
-                       
                         foreach (var item in person)
                         {
                             Console.WriteLine(item.Status);
