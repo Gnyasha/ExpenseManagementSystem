@@ -89,7 +89,11 @@ namespace Application.Configuration.Modules
         private void RegisterDaos(IServiceCollection builder)
         {
             builder.AddTransient<IDbAccess, DbAccess>();
-            builder.AddTransient<SystemUserDao, SystemUserDao>();
+            builder.AddTransient<ISystemLogDao, SystemLogDao>();
+            builder.AddTransient<ITransactionDao, TransactionDao>();
+            builder.AddTransient<ITransactionStatusDao, TransactionStatusDao>();
+            builder.AddTransient<ITransactionAccountDao, TransactionAccountDao>();
+            builder.AddTransient<ISystemUserDao, SystemUserDao>();
         }
     }
 

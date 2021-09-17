@@ -12,7 +12,6 @@ namespace Application.Hosts.ConsoleApp
         static void Main(string[] args)
         {
             System.Console.WriteLine("Hello World");
-            System.Console.WriteLine("Please enter your name");
 
             var services = new ServiceCollection();
 

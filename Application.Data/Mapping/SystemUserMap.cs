@@ -21,7 +21,6 @@ namespace Application.Data.Mapping
             Map(p => p.PasswordHash);
             Map(p => p.PasswordSalt);
             Map(p => p.DateCreated);
-            Map(p => p.Email);
             Map(p => p.IsActive);
             Map(p => p.RoleId);
             Table("SystemUsers");
