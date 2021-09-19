@@ -1,7 +1,4 @@
-﻿using Application.Domain.Models;
-using Application.Hosts.Api.AuthenticationManager;
-using Application.Hosts.Api.Models;
-using Microsoft.AspNetCore.Authentication;
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -14,123 +11,88 @@ using System.Security.Claims;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using System.Web.Mvc.Html;
-using static Application.Hosts.Api.Models.UserAccess;
+
 
 namespace Application.Hosts.Api.Controllers
 {
+    using Application.Contracts.DatabaseSessions;
+    using Application.Domain.Models;
+    using Application.Hosts.Api.AuthenticationManager;
+    using Application.Hosts.Api.Models;
+    using static Application.Hosts.Api.Models.UserAccess;
+
     [Route("api/[controller]")]
     [ApiController]
     public class LoginController : ControllerBase
     {
-        private readonly IAuthManager _authManager;
+        private readonly IAuthManager authManager;
+        private readonly IDbAccess dbAccess;
 
-        public LoginController(IAuthManager authManager)
+        public LoginController(IAuthManager _authManager, IDbAccess _dbAccess)
         {
-            _authManager = authManager;
-
+            authManager = _authManager;
+            dbAccess = _dbAccess;
         }
 
         // POST api/<LoginController>
         [AllowAnonymous]
         [HttpPost]
-        public ActionResult Post([FromBody] LoginRequest loginRequest)
+        public ActionResult Post([FromQuery] LoginRequest loginRequest)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
+            
+            //No Password Hashing and Salting has been implemented so far
+            //So we just check the username and password directly
 
-            if (!(loginRequest.UserId == "a" && loginRequest.Password == "a"))
-            {
-                return Ok(new { Response = "Incorrect Details" });
-            }
+            //check for record existance non case sensitive
+            var user = dbAccess.GetSystemUsers().Where(a => a.Email == loginRequest.Email && a.PasswordHash == loginRequest.Password).FirstOrDefault();
+            if(user == null)
+                return Ok(new { Response = "Incorrect Credentials" });
 
-            var user = new SystemUser();
-            user.Id = 1;
-            user.UserName = "Gnyasha";
+            var email = user.Email;
+            var userPwd = user.PasswordHash;
+            //Check for case sensitivity on email and password
+            if (!(email.Equals(loginRequest.Email) && userPwd.Equals(loginRequest.Password)))
+                return Ok(new { Response = "Incorrect Credentials" });
 
-
-            var claims = new ClaimsIdentity(new[] {
-                         new Claim(ClaimTypes.Name, user.Id.ToString()),
-                         new Claim(ClaimTypes.NameIdentifier,user.UserName),
-                         new Claim(ClaimTypes.Role, "Admin")
-            });
-
-            //int roleId = Convert.ToInt32(EnumHelper<UserRoles>.GetValueFromName(info.UserRole.ToString()));
-            List<UserModuleAccess> pageAccess = new List<UserModuleAccess>();
+            
+            ClaimsIdentity claims = new ClaimsIdentity();
             if (user.RoleId == 1)
             {
-                UserModuleAccess access = new UserModuleAccess();
-                access.active = true;
-                access.IsAdd = true;
-                access.IsDelete = true;
-                access.IsEdit = true;
-                access.IsView = true;
-                access.RoleId = 1;
-                pageAccess.Add(access);
+                claims = new ClaimsIdentity(new[] {
+                new Claim(ClaimTypes.Name, "Admin"),
+                new Claim(ClaimTypes.NameIdentifier, user.UserName),
+                new Claim(ClaimTypes.Role, "Admin"),
+                }, "ApplicationCookie");
+
             }
             else
             {
-                UserModuleAccess access = new UserModuleAccess();
-                access.active = true;
-                access.IsAdd = true;
-                access.IsDelete = false;
-                access.IsEdit = true;
-                access.IsView = true;
-                access.RoleId = 2;
-                pageAccess.Add(access);
-            }
-
-            foreach (var item in pageAccess)
-            {
-                claims.AddClaim(new Claim("Home", item.IsView + "|" + item.IsAdd + "|" + item.IsEdit + "|" + item.IsDelete));
+                claims = new ClaimsIdentity(new[] {
+                new Claim(ClaimTypes.Name, "User"),
+                new Claim(ClaimTypes.NameIdentifier, user.UserName),
+                new Claim(ClaimTypes.Role, "User"),
+            }, "ApplicationCookie");
+              
             }
             var claimsPrincipal = new ClaimsPrincipal(claims);
 
-            var authResult = _authManager.GenerateTokens(loginRequest.UserId, claimsPrincipal.Claims.ToArray(), DateTime.Now);
+            var authResult = authManager.GenerateTokens(loginRequest.Email, claimsPrincipal.Claims.ToArray(), DateTime.Now);
 
             return Ok(new LoginResult
             {
-                UserId = loginRequest.UserId,
+                UserId = loginRequest.Email,
                 AccessToken = authResult.AccessToken,
                 RefreshToken = authResult.RefreshToken
             });
         }
 
-        [Authorize]
-        [HttpPost("refresh-token")]
-        public async Task<ActionResult> RefreshToken([FromBody] RefreshTokenRequest request)
-        {
-            try
-            {
-                var username = User.Identity.Name;
-
-                if (string.IsNullOrWhiteSpace(request.RefreshToken))
-                {
-                    return Unauthorized();
-                }
-                var accessToken = await HttpContext.GetTokenAsync("Bearer", "access_token");
-                var authResult = _authManager.Refresh(request.RefreshToken, accessToken, DateTime.Now);
-                return Ok(new LoginResult
-                {
-                    UserId = username,
-                    AccessToken = authResult.AccessToken,
-                    RefreshToken = authResult.RefreshToken
-
-                });
-            }
-            catch (SecurityTokenException e)
-            {
-                throw;
-            }
-        }
-
+        
     }
 
-    public class RefreshTokenRequest
-    {
-        [JsonPropertyName("refreshToken")]
-        public string RefreshToken { get; set; }
-    }
+  
 
 }

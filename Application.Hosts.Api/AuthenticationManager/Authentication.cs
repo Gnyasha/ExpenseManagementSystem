@@ -68,17 +68,12 @@ namespace Application.Hosts.Api.AuthenticationManager
     public class LoginRequest
     {
         [Required]
-        [JsonPropertyName("user_id")]
-        public string UserId { get; set; }
+        [JsonPropertyName("email")]
+        public string Email { get; set; } = "admin@admin.com";
 
         [Required]
         [JsonPropertyName("password")]
-        public string Password { get; set; }
+        public string Password { get; set; } = "admin";
 
-        [JsonPropertyName("redirect_url")]
-        public string RedirectUrl { get; set; }
-
-        [JsonPropertyName("state")]
-        public string State { get; set; }
     }
 }

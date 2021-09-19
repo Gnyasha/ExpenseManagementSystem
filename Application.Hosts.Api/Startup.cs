@@ -34,7 +34,7 @@ namespace Application.Hosts.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddLogging(x => { x.AddConsole(); });
+           
             services.AddControllers();
             services.AddMvc();
             services.AddControllers().AddJsonOptions(options => {
@@ -139,6 +139,21 @@ namespace Application.Hosts.Api
             services.AddSingleton<IAuthManager, AuthManager>();
             #endregion
 
+
+            #region Auth Policies
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("Admin", policy => policy.RequireAssertion(context =>
+                    context.User.IsInRole("Admin")
+                ));
+
+                //options.AddPolicy("User", policy => policy.RequireAssertion(context =>
+                //    context.User.IsInRole("User")
+                //));
+
+            });
+            #endregion
+            services.AddLogging(x => { x.AddConsole(); });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -153,7 +168,9 @@ namespace Application.Hosts.Api
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
+           
 
             app.UseEndpoints(endpoints =>
             {
@@ -166,6 +183,9 @@ namespace Application.Hosts.Api
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Expense Management API V1");
             });
 
+            app.UseCors("CorsPolicy");
+            
+            
         }
     }
 }

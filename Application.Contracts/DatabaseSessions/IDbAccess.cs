@@ -26,6 +26,9 @@ namespace Application.Contracts.DatabaseSessions
         SystemLog SaveOrUpdate(SystemLog entity);
 
 
+        decimal GetBalance();
+
+
         //Delete the provided entity
         void DeleteEntity(SystemUser entity);
         void DeleteEntity(TransactionStatus entity);

@@ -111,5 +111,28 @@ namespace Application.Resources.Data
             session.FlushAsync();
             return entity;
         }
+
+        /// <summary>
+        /// Get Balance
+        /// </summary>
+        /// <returns></returns>
+        public decimal GetBalance()
+        {
+            //Pending and Authorized only - Ignore rejected transactions
+            var trans = session.Query<Transaction>().Where(a => a.TransactionStatusId != 3);
+            
+            decimal sum = 0;
+            
+            foreach (var item in trans)
+            {
+                decimal amt = item.Debit;
+                //All transactions of type 2 are payments, they have a negative effect on the balance
+                if (item.TransactionTypeId == 2)
+                    amt = amt * -1;
+                sum += amt;
+            }
+
+            return sum;
+        }
     }
 }
