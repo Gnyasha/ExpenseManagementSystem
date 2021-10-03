@@ -11,6 +11,7 @@ namespace Application.Hosts.Api.Controllers
     using Application.Contracts.DatabaseSessions;
     using Application.Domain.Models;
     using Application.Hosts.Api.Models;
+    using System.IO;
 
     [Route("api/[controller]")]
     [ApiController]
@@ -326,6 +327,67 @@ namespace Application.Hosts.Api.Controllers
             }
         }
 
-       
+        /// <summary>
+        /// Upload Transaction Bill Files
+        /// </summary>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        [HttpPost("UploadTransactionBill")]
+        [Authorize(Roles = "Admin,User")]
+        public ActionResult UploadTransactionBill([FromQuery] BillAttachmentModel attachment)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+           
+            var responseObject = new ResponseInfo<string>();
+            try
+            {
+                List<byte[]> files = new List<byte[]>();
+                foreach (var file in attachment.Attachments)
+                {
+                    if (file.Length > 0)
+                    {
+                        using (var ms = new MemoryStream())
+                        {
+                            file.CopyTo(ms);
+                            var fileBytes = ms.ToArray();
+                            //string s = Convert.ToBase64String(fileBytes);
+                            files.Add(fileBytes);
+                        }
+                    }
+                }
+
+                //check if reference exists before upload
+                var exists = dbAccess.GetTransactions().Where(a => a.Reference == attachment.TransactionReference).Select(a => a.Reference).FirstOrDefault();
+
+                if(exists == null)
+                    return BadRequest("Invalid Reference");
+
+                foreach (var item in files)
+                {
+                    TransactionAttachment transactionAttachment = new TransactionAttachment();
+                    transactionAttachment.AttachmentName = attachment.AttachmentName;
+                    transactionAttachment.TransactionReference = attachment.TransactionReference;
+                    transactionAttachment.Attachment = item;
+                    transactionAttachment.DateCreated = DateTime.Now;
+
+                    dbAccess.SaveOrUpdate(transactionAttachment);
+                }
+
+                responseObject.Data = "Upload Successful";
+                responseObject.ResponseMessage = "Upload Successful";
+                responseObject.ResponseStatus = true;
+
+                return Ok(responseObject);
+            }
+            catch (Exception ex)
+            {
+                return Ok(new ResponseInfo<string> { ResponseStatus = false, ResponseMessage = ex.Message });
+            }
+        }
+
+
     }
 }

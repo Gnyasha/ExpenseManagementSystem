@@ -93,6 +93,7 @@ namespace Application.Configuration.Modules
             builder.AddTransient<ITransactionDao, TransactionDao>();
             builder.AddTransient<ITransactionStatusDao, TransactionStatusDao>();
             builder.AddTransient<ITransactionAccountDao, TransactionAccountDao>();
+            builder.AddTransient<ITransactionAttachmentDao, TransactionAttachmentDao>();
             builder.AddTransient<ISystemUserDao, SystemUserDao>();
         }
     }

@@ -16,7 +16,7 @@ namespace Application.Contracts.DatabaseSessions
         IQueryable<TransactionAccount> GetTransactionAccounts();
         IQueryable<Transaction> GetTransactions();
         IQueryable<SystemLog> GetSystemLogs();
-
+        IQueryable<TransactionAttachment> GetTransactionAttachments();
 
         // Save or Updates entity and returns the same entity
         SystemUser SaveOrUpdate(SystemUser entity);
@@ -24,6 +24,7 @@ namespace Application.Contracts.DatabaseSessions
         TransactionAccount SaveOrUpdate(TransactionAccount entity);
         Transaction SaveOrUpdate(Transaction entity);
         SystemLog SaveOrUpdate(SystemLog entity);
+        TransactionAttachment SaveOrUpdate(TransactionAttachment entity);
 
 
         decimal GetBalance();
@@ -35,5 +36,6 @@ namespace Application.Contracts.DatabaseSessions
         void DeleteEntity(TransactionAccount entity);
         void DeleteEntity(Transaction entity);
         void DeleteEntity(SystemLog entity);
+        void DeleteEntity(TransactionAttachment entity);
     }
 }

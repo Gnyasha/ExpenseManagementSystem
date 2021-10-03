@@ -19,7 +19,7 @@ namespace Application.Resources.Data
         private readonly ISession session;
 
         /// <summary>
-        /// Initialises an instance of a <see cref="SystemUser"/>
+        /// Initialises an instance of a <see cref="DbAccess"/>
         /// </summary>
         /// <param name="session"></param>
         public DbAccess(ISession _session)
@@ -133,6 +133,23 @@ namespace Application.Resources.Data
             }
 
             return sum;
+        }
+
+        public IQueryable<TransactionAttachment> GetTransactionAttachments()
+        {
+            return session.Query<TransactionAttachment>();
+        }
+
+        public TransactionAttachment SaveOrUpdate(TransactionAttachment entity)
+        {
+            session.SaveOrUpdate(entity);
+            session.FlushAsync();
+            return entity;
+        }
+
+        public void DeleteEntity(TransactionAttachment entity)
+        {
+            session.Delete(entity);
         }
     }
 }
